@@ -1,0 +1,136 @@
+#pragma once
+#include <Arduino.h>
+#include <ArduinoJson.h>
+
+// 推送通道类型
+enum PushType {
+  PUSH_TYPE_NONE         = 0,
+  PUSH_TYPE_POST_JSON    = 1,
+  PUSH_TYPE_BARK         = 2,
+  PUSH_TYPE_GET          = 3,
+  PUSH_TYPE_DINGTALK     = 4,
+  PUSH_TYPE_PUSHPLUS     = 5,
+  PUSH_TYPE_SERVERCHAN   = 6,
+  PUSH_TYPE_CUSTOM       = 7,
+  PUSH_TYPE_FEISHU       = 8,
+  PUSH_TYPE_GOTIFY       = 9,
+  PUSH_TYPE_TELEGRAM     = 10,
+  PUSH_TYPE_WECHAT_WORK  = 11,
+  PUSH_TYPE_SMS          = 12
+};
+
+// 推送策略
+enum PushStrategy {
+  PUSH_STRATEGY_BROADCAST = 0,
+  PUSH_STRATEGY_FAILOVER  = 1
+};
+
+// 消息类型
+enum MsgType {
+  MSG_TYPE_SMS  = 0,
+  MSG_TYPE_CALL = 1,
+  MSG_TYPE_SIM  = 2
+};
+
+constexpr int MAX_PUSH_CHANNELS    = 10;
+constexpr int MAX_WIFI_ENTRIES      = 5;
+constexpr int MAX_BLACKLIST_ENTRIES = 20;
+
+#define DEFAULT_WEB_USER "admin"
+#define DEFAULT_WEB_PASS "admin123"
+
+// 应用名称常量（用宏支持字符串字面量拼接）
+#define APP_NAME    "SMS-Forwarder"
+#define APP_AUTHOR  "keroming"
+constexpr char kAppName[] = APP_NAME;        // 基础名称
+constexpr char kApSsid[]  = APP_NAME "-AP";  // WiFi AP 模式 SSID
+
+struct PushChannel {
+  bool     enabled;
+  PushType type;
+  String   name;
+  String   url;
+  String   key1;
+  String   key2;
+  String   customBody;
+  bool     retryOnFail;
+};
+
+struct WifiEntry {
+  String ssid;
+  String password;
+};
+
+struct Config {
+  String     adminPhone;
+  String     webUser;
+  String     webPass;
+  PushChannel pushChannels[MAX_PUSH_CHANNELS];
+  int          pushCount;
+  bool         simNotifyEnabled;
+  bool         dataTraffic;
+  bool         logFileEnabled;
+  // USB AT 透传模式：开机时不启动 SimDispatcher，把模组 AT 接口原样交给 USB 主机。
+  // 开启后设备不再接收短信与来电，仅作为 USB AT 通道，改动后需重启生效。
+  bool         atBridgeEnabled;
+
+  // 短信消费归属（「胖/瘦模式」）。
+  //   false = 胖模式：AT+CNMI=2,2，新短信作为 +CMT: URC 直投本固件，由本固件
+  //           解析并走推送通道。短信**不进模组存储**。
+  //   true  = 瘦模式：AT+CNMI=2,1，新短信落入模组/SIM 存储并只给一条 +CMTI:
+  //           指示。本固件不消费，交由外部系统（如 Simplus）轮询取走并删除。
+  // 二者互斥：同一条短信只能有一个消费者，否则会出现「有时进推送、有时进外部
+  // 系统」这种最难排查的状态。
+  bool         thinModeEnabled;
+  WifiEntry    wifiList[MAX_WIFI_ENTRIES];
+  int          wifiCount;
+
+  // 设备自身热点（SoftAP）设置 —— 「换个环境还能配网」的兜底手段。
+  //   apSsid     热点名称，默认 SMS-Forwarder-AP
+  //   apPass     热点密码；空 = 开放热点（无密码）。WPA2 要求至少 8 位，
+  //              不足 8 位时会被当成开放热点处理
+  //   apAlwaysOn 热点常开：即使已经连上路由器也同时广播热点，
+  //              这样在手机/电脑的 WiFi 列表里随时能找到设备，
+  //              连上后访问 http://192.168.4.1/ 就能进管理页
+  String       apSsid;
+  String       apPass;
+  bool         apAlwaysOn;
+
+  String       blacklist[MAX_BLACKLIST_ENTRIES];
+  int          blacklistCount;
+  PushStrategy pushStrategy;
+  String       remark;   // 设备备注，最大 64 字符
+};
+
+struct RebootSchedule {
+  bool    enabled;
+  uint8_t mode;       // 0 = daily, 1 = interval
+  uint8_t hour;
+  uint8_t minute;
+  uint16_t intervalH;
+};
+
+extern Config config;
+extern RebootSchedule rebootSchedule;
+
+// All config operations are static methods. Backing storage stays as global structs above
+// to keep call sites short (e.g. `config.adminPhone`).
+class ConfigStore {
+public:
+  static void load();
+  static void save();
+  static void reset();
+  static void loadReboot(RebootSchedule& sched);
+  static void saveReboot(const RebootSchedule& sched);
+  static void rebootTick();
+  static bool isPushChannelValid(const PushChannel& ch);
+  static bool isValid();
+
+  // JSON serialization shared by export/import controllers.
+  // Adding/modifying Config or RebootSchedule fields only needs updating these two methods.
+  static void toJson(JsonDocument& doc);
+  static void fromJson(JsonDocument& doc);
+
+  // Insert a WiFi at the head of wifiList (deduplicates), then save.
+  static void insertWifiFirst(const String& ssid, const String& pass);
+};

@@ -1,0 +1,61 @@
+#pragma once
+#include <Arduino.h>
+
+// 来电事件缓冲:供外部系统(Simplus)获知「谁在什么时候打来过」。
+//
+// 为什么必须缓冲:RING / +CLIP 是纯实时主动上报,模组和 SIM 卡里**没有任何存储**
+// (EF_SMS 只存短信),那一刻没人记下来就永久消失。短信可以靠轮询模组存储补取,来电
+// 不行 —— 所以这层缓冲是外部系统能感知来电的唯一途径。
+//
+// 只记录「发生过一次来电」这一事实,不涉及接听、挂断、媒体或通话状态机。
+//
+// 容量有限且满时丢最旧:来电是瞬时事件,保留最近的比保留最早的有用。
+//
+// 丢失量由消费方推导,桥不做统计。桥不知道消费方读到哪了 —— 游标是消费方的状态,而且
+// 原则上可以有多个读者。桥只报告「我还留着的最旧序号」,消费方用自己的游标算:
+//     lost = max(0, oldestSequence - (lastSequence + 1))
+// 这样对每个读者都精确。桥自己数「覆盖次数」是错的:环满后每次覆盖都会累加,即便那条
+// 早已被读走,于是正常运行攒够 CAPACITY 次来电就开始虚增。
+class CallEvents {
+public:
+  // 缓冲条数。按外部系统 2 秒轮询计算,32 条足以覆盖长时间离线后的追补;
+  // 每条约 40 字节,总计约 1.3KB。
+  static constexpr size_t CAPACITY = 32;
+
+  struct Event {
+    uint32_t      sequence;    // 单调递增,重启归零,消费方据此做游标
+    unsigned long observedMs;  // 记录时刻的 millis()
+    time_t        observedAt;  // 记录时刻的墙钟时间;未同步时为 0
+    char          number[24];  // 主叫号码,或占位文本
+  };
+
+  static void init();
+
+  // 本次启动的随机标识,16 位十六进制。
+  //
+  // 为什么必须有:sequence 在桥重启后归零。若消费方记着游标 12 而桥重启后新事件从 1
+  // 开始,它会永久读不到任何东西 —— 而且两侧日志都正常,这是最难排查的一类故障。
+  //
+  // 消费方义务:每次查询都比对 bootId,不同则必须把游标重置为 0。重启前尚未读走的
+  // 事件随 RAM 一起消失,无法补取,因此重置是唯一正确的动作;这一事实由 bootId 变化
+  // 显式告知,而不是让消费方从「读不到东西」去猜。
+  //
+  // 进程内唯一:后续若新增其他 /events/* 端点,应复用同一个 bootId,而不是各自生成
+  // —— 消费方需要能用一个值判断「是同一次启动」。
+  static const char* bootId();
+
+  // 记录一次来电。由 Call::dispatch() 调用 —— 那是推送的单一汇聚点,因此这里的
+  // 记录与固件自身的推送严格同源,不会出现「推送了但外部系统查不到」。
+  static void record(const String& callerNumber);
+
+  // 取出 sequence 大于 after 的事件,最多 max 条,按 sequence 升序写入 out。
+  // 返回实际写入条数。
+  static size_t since(uint32_t after, Event* out, size_t max);
+
+  // 最后一条事件的序号,也是已产生事件总数。
+  static uint32_t latestSequence();
+
+  // 仍保留在缓冲里的最旧序号;缓冲为空时为 0。
+  // 消费方据此与自己的游标相减得到确切丢失量,见文件头说明。
+  static uint32_t oldestSequence();
+};

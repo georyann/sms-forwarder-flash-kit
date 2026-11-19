@@ -1,0 +1,2097 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>工具箱</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background: #f5f5f5;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background: #2196f3;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+      }
+
+      button:hover {
+        background: #1976d2;
+      }
+
+      .btn-query {
+        background: #9c27b0;
+      }
+
+      .btn-query:hover {
+        background: #7b1fa2;
+      }
+
+      .btn-ping {
+        background: #ff9800;
+      }
+
+      .btn-ping:hover {
+        background: #f57c00;
+      }
+
+      .btn-info {
+        background: #607d8b;
+      }
+
+      .btn-info:hover {
+        background: #455a64;
+      }
+
+      .btn-retry {
+        background: #2196f3;
+        margin-top: 8px;
+      }
+
+      .btn-retry:hover {
+        background: #1976d2;
+      }
+
+      button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .section {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+      }
+
+      .section-title {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      .status {
+        padding: 10px;
+        background: #e7f3fe;
+        border-left: 4px solid #2196f3;
+        margin-bottom: 20px;
+      }
+
+      .nav {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .nav a {
+        flex: 1;
+        text-align: center;
+        padding: 10px;
+        background: #eee;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #333;
+      }
+
+      .nav a.active {
+        background: #2196f3;
+        color: white;
+      }
+
+      .char-count {
+        font-size: 12px;
+        color: #888;
+        text-align: right;
+      }
+
+      .hint {
+        font-size: 12px;
+        color: #888;
+        margin-top: 5px;
+      }
+
+      .result-box {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        display: none;
+      }
+
+      .result-success {
+        background: #e8f5e9;
+        border-left: 4px solid #4caf50;
+        color: #2e7d32;
+      }
+
+      .result-error {
+        background: #ffebee;
+        border-left: 4px solid #f44336;
+        color: #c62828;
+      }
+
+      .result-loading {
+        background: #fff3e0;
+        border-left: 4px solid #ff9800;
+        color: #e65100;
+      }
+
+      .result-info {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        color: #1565c0;
+      }
+
+      .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 8px;
+      }
+
+      .info-table td {
+        padding: 5px 8px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .info-table td:first-child {
+        font-weight: bold;
+        width: 40%;
+        color: #555;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .btn-group button {
+        flex: 1;
+        min-width: 120px;
+      }
+
+      #atLog {
+        background: #333;
+        color: #00ff00;
+        font-family: "Courier New", Courier, monospace;
+        min-height: 150px;
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        font-size: 13px;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+
+      .at-input-group {
+        display: flex;
+        gap: 10px;
+      }
+
+      .at-input-group input {
+        flex: 1;
+        font-family: monospace;
+      }
+
+      .at-input-group button {
+        width: auto;
+        min-width: 80px;
+        margin-top: 0;
+      }
+
+      .status-table td:first-child {
+        width: 45%;
+      }
+
+      .error-box {
+        padding: 15px;
+        background: #ffebee;
+        border-left: 4px solid #f44336;
+        color: #c62828;
+        border-radius: 3px;
+        margin-bottom: 10px;
+      }
+
+      input[type="date"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+
+      .check-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .check-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: normal;
+        color: #555;
+        margin-bottom: 0;
+      }
+
+      .check-item input[type="checkbox"] {
+        width: auto;
+        margin: 0;
+      }
+
+      .msg-list {
+        margin-top: 10px;
+        max-height: 420px;
+        overflow-y: auto;
+      }
+
+      .msg-item {
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 8px;
+        background: #fafafa;
+      }
+
+      .msg-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-weight: bold;
+        color: #333;
+      }
+
+      .msg-time {
+        font-weight: normal;
+        color: #888;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .msg-kind {
+        font-size: 12px;
+        color: #888;
+        margin: 4px 0;
+      }
+
+      .msg-body {
+        color: #333;
+        word-break: break-all;
+        white-space: pre-wrap;
+      }
+
+      .rem-item {
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 8px;
+        background: #fafafa;
+      }
+
+      .rem-title {
+        font-weight: bold;
+        color: #333;
+      }
+
+      .rem-sub {
+        font-size: 12px;
+        color: #666;
+        margin-top: 4px;
+      }
+
+      .rem-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .rem-actions button {
+        width: auto;
+        margin-top: 0;
+        padding: 6px 14px;
+        font-size: 13px;
+      }
+
+      .rem-list {
+        margin-top: 10px;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 1px 6px;
+        border-radius: 3px;
+        font-size: 12px;
+        background: #e3f2fd;
+        color: #1565c0;
+        margin-right: 4px;
+      }
+
+      .badge-warn {
+        background: #fff3e0;
+        color: #e65100;
+      }
+
+      .badge-danger {
+        background: #ffebee;
+        color: #c62828;
+      }
+
+      .badge-ok {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📱 短信转发器</h1>
+      <div class="nav">
+        <a href="/">⚙️ 系统配置</a>
+        <a href="/tools" class="active">🧰 工具箱</a>
+      </div>
+      <div class="status" id="statusBar">
+        设备IP: <strong id="devIp">加载中...</strong> &nbsp;|&nbsp; WiFi:
+        <strong id="wifiStatus">-</strong> &nbsp;|&nbsp; 配置:
+        <strong id="cfgStatus">-</strong>
+      </div>
+      <div
+        id="flashStatus"
+        style="
+          display: none;
+          padding: 10px;
+          background: #f5f5f5;
+          border-left: 4px solid #9e9e9e;
+          margin-bottom: 20px;
+          font-size: 13px;
+        "
+      >
+        Flash占用: <span id="flashUsageText">-</span>
+      </div>
+      <div
+        id="statusError"
+        class="error-box"
+        role="alert"
+        style="display: none"
+      >
+        <span id="statusErrorMsg"></span>
+        <br />
+        <button class="btn-retry" onclick="loadStatus()">🔄 重试</button>
+      </div>
+
+      <div class="section">
+        <div class="section-title">📤 发送短信</div>
+        <div class="form-group">
+          <label>目标号码</label>
+          <input type="text" id="smsPhone" placeholder="13800138000" />
+        </div>
+        <div class="form-group">
+          <label>短信内容</label>
+          <textarea
+            id="smsContent"
+            placeholder="请输入短信内容..."
+            oninput="updateCount(this)"
+          ></textarea>
+          <div class="char-count">
+            已输入 <span id="charCount">0</span> 字符
+          </div>
+        </div>
+        <button type="button" id="sendSmsBtn" onclick="sendSms()">
+          📨 发送短信
+        </button>
+        <div class="result-box" id="smsResult"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">📨 收到的信息</div>
+        <div class="btn-group">
+          <button type="button" onclick="clearMessages()" style="background: #f44336">
+            🗑️ 清空
+          </button>
+        </div>
+        <div class="hint">
+          收到的短信和来电会保存在设备里（最多保留 50 条），关掉网页也不会丢；新消息会自动出现
+        </div>
+        <div class="result-box" id="messagesResult"></div>
+        <div id="messageList" class="msg-list"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">📅 SIM卡到期提醒</div>
+        <div class="btn-group" style="margin-bottom: 10px">
+          <button type="button" onclick="loadExpiry()" style="background: #2196f3">
+            🔄 刷新列表
+          </button>
+        </div>
+        <div class="hint" style="margin-bottom: 10px">
+          可以保存任意号码（不限于设备里插着的卡）。当前本机号码：
+          <strong id="expCurrent">未知</strong>
+        </div>
+        <div class="form-group">
+          <label>号码</label>
+          <div style="display: flex; gap: 8px">
+            <input type="text" id="expNumber" placeholder="例如 +85244323450" style="flex: 1" />
+            <button
+              type="button"
+              onclick="fillCurrentNumber()"
+              style="width: auto; margin-top: 0; padding: 10px 14px; white-space: nowrap"
+            >
+              用本机号码
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>到期日期</label>
+          <input type="date" id="expDate" />
+        </div>
+        <div class="form-group">
+          <label>备注（可选）</label>
+          <input type="text" id="expNote" placeholder="例如：月租套餐 / 副卡" />
+        </div>
+        <div class="form-group">
+          <label>到期前多久提醒</label>
+          <div class="check-row">
+            <label class="check-item">
+              <input type="checkbox" id="expOff30" checked /> 提前 30 天
+            </label>
+            <label class="check-item">
+              <input type="checkbox" id="expOff15" checked /> 提前 15 天
+            </label>
+            <label class="check-item">
+              <input type="checkbox" id="expOff7" checked /> 提前 7 天
+            </label>
+            <label class="check-item">
+              <input type="checkbox" id="expOff1" checked /> 提前 1 天
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="check-item">
+            <input type="checkbox" id="expEnabled" checked /> 启用这条提醒
+          </label>
+        </div>
+        <button type="button" id="expSaveBtn" onclick="saveExpiry()">
+          💾 保存到期提醒
+        </button>
+        <button
+          type="button"
+          id="expCancelBtn"
+          onclick="resetExpiryForm()"
+          style="display: none; background: #607d8b"
+        >
+          取消编辑
+        </button>
+        <div class="result-box" id="expiryResult"></div>
+        <div id="expiryList" class="rem-list"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">🖥️ SOC 信息查询</div>
+        <button type="button" class="btn-info" id="socBtn" onclick="querySoc()">
+          🔍 查询 SOC 信息
+        </button>
+        <div class="result-box" id="socResult"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">📊 模组信息查询</div>
+        <div class="btn-group">
+          <button type="button" class="btn-query" onclick="queryInfo('ati')">
+            📋 固件信息
+          </button>
+          <button type="button" class="btn-query" onclick="queryInfo('signal')">
+            📶 信号质量
+          </button>
+        </div>
+        <div class="btn-group" style="margin-top: 10px">
+          <button type="button" class="btn-info" onclick="queryInfo('siminfo')">
+            💳 SIM卡信息
+          </button>
+          <button type="button" class="btn-info" onclick="queryInfo('network')">
+            🌍 网络状态
+          </button>
+        </div>
+        <div class="btn-group" style="margin-top: 10px">
+          <button
+            type="button"
+            onclick="queryInfo('wifi')"
+            style="background: #00bcd4"
+          >
+            📡 WiFi状态
+          </button>
+        </div>
+        <div class="result-box" id="queryResult"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">🌐 网络测试</div>
+        <button
+          type="button"
+          class="btn-ping"
+          id="pingBtn"
+          onclick="confirmPing()"
+        >
+          📡 点我消耗一点流量
+        </button>
+        <div class="hint">
+          将向 8.8.8.8 进行 ping 操作，一次性消耗极少流量费用
+        </div>
+        <div class="result-box" id="pingResult"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">✈️ 模组控制</div>
+        <div class="btn-group">
+          <button
+            type="button"
+            id="flightBtn"
+            onclick="toggleFlightMode()"
+            style="background: #e91e63"
+          >
+            ✈️ 切换飞行模式
+          </button>
+          <button
+            type="button"
+            onclick="queryFlightMode()"
+            style="background: #9c27b0"
+          >
+            🔍 查询状态
+          </button>
+        </div>
+        <div class="hint">
+          飞行模式关闭时模组可正常收发短信，开启后将关闭射频无法使用移动网络
+        </div>
+        <div class="result-box" id="flightResult"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">💻 AT 指令调试</div>
+        <div id="atLog">等待输入指令...</div>
+        <div class="at-input-group">
+          <input
+            type="text"
+            id="atCmd"
+            placeholder="输入 AT 指令，如: AT+CSQ"
+            onkeydown="if (event.key === 'Enter') sendAT();"
+          />
+          <button type="button" onclick="sendAT()" id="atBtn">发送</button>
+        </div>
+        <div class="btn-group" style="margin-top: 10px">
+          <button type="button" class="btn-info" onclick="clearATLog()">
+            🧹 清空日志
+          </button>
+        </div>
+        <div class="hint">直接向模组串口发送指令并接收响应，请谨慎操作</div>
+      </div>
+
+      <div class="section" id="otaSection">
+        <div class="section-title">🔄 固件升级</div>
+        <div id="otaVersionInfo" style="margin-bottom: 12px">
+          <table class="info-table">
+            <tr>
+              <td>当前版本</td>
+              <td id="otaCurVer">获取中...</td>
+            </tr>
+            <tr>
+              <td>最新版本</td>
+              <td id="otaLatestVer">检查中...</td>
+            </tr>
+          </table>
+        </div>
+        <div id="otaProgress" class="result-box" style="display: none"></div>
+        <div id="otaOnlineArea" style="margin-top: 10px">
+          <button
+            type="button"
+            id="otaOnlineBtn"
+            onclick="startOnlineUpgrade()"
+            style="background: #4caf50"
+            disabled
+          >
+            🌐 在线升级
+          </button>
+          <div
+            id="otaUpToDate"
+            class="hint"
+            style="color: #4caf50; display: none"
+          >
+            ✅ 已是最新版本，无需升级
+          </div>
+        </div>
+        <div
+          id="otaUploadArea"
+          style="
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 12px;
+          "
+        >
+          <label
+            style="
+              display: block;
+              margin-bottom: 5px;
+              font-weight: bold;
+              color: #555;
+            "
+            >手动上传固件（ota-*.bin）</label
+          >
+          <input
+            type="file"
+            id="otaFile"
+            accept=".bin"
+            style="margin-bottom: 8px"
+          />
+          <button
+            type="button"
+            id="otaUploadBtn"
+            onclick="startManualUpgrade()"
+            style="background: #ff9800"
+          >
+            📂 手动升级固件
+          </button>
+        </div>
+        <div
+          id="otaUploadFsArea"
+          style="
+            margin-top: 12px;
+            border-top: 1px solid #eee;
+            padding-top: 12px;
+          "
+        >
+          <label
+            style="
+              display: block;
+              margin-bottom: 5px;
+              font-weight: bold;
+              color: #555;
+            "
+            >单独更新 Web UI（littlefs-*.bin）</label
+          >
+          <input
+            type="file"
+            id="otaFsFile"
+            accept=".bin"
+            style="margin-bottom: 8px"
+          />
+          <button
+            type="button"
+            id="otaUploadFsBtn"
+            onclick="startManualLfsUpgrade()"
+            style="background: #607d8b"
+          >
+            📂 手动更新 Web UI
+          </button>
+        </div>
+        <div class="hint" style="margin-top: 8px; color: #e65100">
+          ⚠️ 升级期间请勿断电，升级成功后设备将自动重启
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">📋 日志管理</div>
+        <div class="btn-group">
+          <button type="button" onclick="openLogs()" style="background: #009688">
+            📄 打开日志
+          </button>
+          <button type="button" id="clearLogsBtn" onclick="clearLogs()" style="background: #f44336">
+            🗑️ 清除日志
+          </button>
+        </div>
+        <div class="hint">打开日志将在新标签页展示设备日志文件内容</div>
+        <div class="result-box" id="logsResult"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">🖥️ 设备管理</div>
+        <div class="form-group">
+          <button
+            type="button"
+            id="rebootBtn"
+            onclick="rebootDevice()"
+            style="background: #ff5722"
+          >
+            🔁 重启设备
+          </button>
+          <div class="hint" style="color: #888; margin-top: 6px">
+            重启后设备将在约20秒内恢复正常工作
+          </div>
+          <div class="result-box" id="rebootResult"></div>
+        </div>
+        <div class="form-group" style="margin-top: 15px">
+          <button
+            type="button"
+            id="exportCoredumpBtn"
+            onclick="exportCoreDump()"
+            style="background: #795548"
+          >
+            📦 导出 coredump
+          </button>
+          <div class="hint" style="color: #888; margin-top: 6px">
+            设备异常重启后可导出 coredump 供远程分析，文件可能包含内存快照信息，请谨慎分享
+          </div>
+          <div id="coredumpInfoCard" style="display: none; margin-top: 8px; padding: 10px; background: #fff3e0; border-left: 4px solid #ff9800; border-radius: 4px; color: #e65100; font-size: 13px;"></div>
+          <div class="result-box" id="coredumpResult"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">🗂️ 配置管理</div>
+        <div class="form-group">
+          <button
+            type="button"
+            onclick="exportConfig()"
+            style="background: #4caf50"
+          >
+            📥 导出配置
+          </button>
+          <div class="hint" style="color: #e65100; margin-top: 6px">
+            ⚠️ 导出文件包含密码等敏感信息，请妥善保管
+          </div>
+        </div>
+        <div class="form-group" style="margin-top: 15px">
+          <button
+            type="button"
+            id="resetBtn"
+            onclick="resetConfig()"
+            style="background: #f44336"
+          >
+            🗑️ 重置配置
+          </button>
+          <div class="hint" style="color: #e65100; margin-top: 6px">
+            ⚠️ 重置将清除所有配置并自动重启，操作不可撤销
+          </div>
+        </div>
+        <div class="result-box" id="resetResult"></div>
+        <div class="form-group" style="margin-top: 15px">
+          <label>导入配置（选择 .json 文件）</label>
+          <input
+            type="file"
+            id="importFile"
+            accept=".json"
+            style="margin-bottom: 8px"
+          />
+          <button
+            type="button"
+            id="importBtn"
+            onclick="importConfig()"
+            style="background: #ff9800"
+          >
+            📤 导入配置
+          </button>
+        </div>
+        <div class="result-box" id="importResult"></div>
+      </div>
+    </div>
+
+    <script>
+      function exportConfig() {
+        window.location.href = "/api/config/export";
+      }
+
+      function fmt(b) {
+        if (b >= 1048576) return (b / 1048576).toFixed(2) + " MB";
+        return (b / 1024).toFixed(1) + " KB";
+      }
+
+      function resetConfig() {
+        var result = document.getElementById("resetResult");
+        var btn = document.getElementById("resetBtn");
+
+        if (
+          !confirm(
+            "⚠️ 确认重置？\n\n此操作将清除所有配置并自动重启设备，无法撤销！",
+          )
+        )
+          return;
+
+        result.className = "result-box result-loading";
+        result.style.display = "block";
+        result.textContent = "正在获取重置凭证...";
+        btn.disabled = true;
+
+        fetch("/api/tools/reset-token")
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (d) {
+            result.textContent = "正在重置配置...";
+            return fetch("/api/tools/reset", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token: d.token }),
+            });
+          })
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (d) {
+            if (d.ok) {
+              result.className = "result-box result-success";
+              var count = 2;
+              result.textContent = "✅ " + d.message + "（" + count + "秒）";
+              var timer = setInterval(function () {
+                count--;
+                if (count <= 0) {
+                  clearInterval(timer);
+                  result.textContent = "🔄 设备正在重启，请稍候...";
+                } else {
+                  result.textContent =
+                    "✅ " + d.message + "（" + count + "秒）";
+                }
+              }, 1000);
+            } else {
+              result.className = "result-box result-error";
+              result.textContent = "❌ " + (d.error || "重置失败");
+              btn.disabled = false;
+            }
+          })
+          .catch(function (e) {
+            result.className = "result-box result-error";
+            result.textContent = "❌ 请求失败: " + e.message;
+            btn.disabled = false;
+          });
+      }
+
+      function rebootDevice() {
+        var result = document.getElementById("rebootResult");
+        var btn = document.getElementById("rebootBtn");
+
+        if (!confirm("确定要重启设备吗？\n\n设备将在2秒后重启，期间无法收发短信。")) return;
+
+        result.className = "result-box result-loading";
+        result.style.display = "block";
+        result.textContent = "正在获取凭证...";
+        btn.disabled = true;
+
+        fetch("/api/tools/reset-token")
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            result.textContent = "正在重启设备...";
+            return fetch("/api/tools/reboot", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token: d.token }),
+            });
+          })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (d.ok) {
+              result.className = "result-box result-success";
+              var count = 2;
+              result.textContent = "✅ " + d.message + "（" + count + "秒）";
+              var timer = setInterval(function () {
+                count--;
+                if (count <= 0) {
+                  clearInterval(timer);
+                  result.textContent = "🔄 设备正在重启，请稍候...";
+                } else {
+                  result.textContent = "✅ " + d.message + "（" + count + "秒）";
+                }
+              }, 1000);
+            } else {
+              result.className = "result-box result-error";
+              result.textContent = "❌ " + (d.error || "重启失败");
+              btn.disabled = false;
+            }
+          })
+          .catch(function (e) {
+            result.className = "result-box result-error";
+            result.textContent = "❌ 请求失败: " + e.message;
+            btn.disabled = false;
+          });
+      }
+
+      var coredumpElfUrl = "";
+
+      function loadCoredumpInfo() {
+        fetch("/api/tools/coredump/info")
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (!d.hasCoredump) return;
+            var card = document.getElementById("coredumpInfoCard");
+            var timeStr = "时间未知";
+            if (d.crashTime && d.crashTime > 0) {
+              timeStr = new Date(d.crashTime * 1000).toLocaleString("zh-CN");
+            }
+            var sizeStr = d.size ? (" / 文件大小: " + (d.size >= 1048576
+              ? (d.size / 1048576).toFixed(2) + " MB"
+              : (d.size / 1024).toFixed(1) + " KB")) : "";
+            var verStr = d.crashVersion ? (" / 固件版本: " + d.crashVersion) : "";
+            var elfHtml = "";
+            if (d.elfUrl) {
+              coredumpElfUrl = d.elfUrl;
+              elfHtml = "<br><a href='" + d.elfUrl + "' target='_blank' "
+                + "style='color:#e65100;font-size:12px;'>"
+                + "📥 下载对应调试符号文件（firmware.elf）</a>";
+            }
+            card.innerHTML = "⚠️ <strong>检测到崩溃记录</strong><br>崩溃时间：" + timeStr + "（近似）" + verStr + sizeStr + elfHtml;
+            card.style.display = "block";
+          })
+          .catch(function () {});
+      }
+
+      function exportCoreDump() {
+        var btn = document.getElementById("exportCoredumpBtn");
+        var result = document.getElementById("coredumpResult");
+
+        btn.disabled = true;
+        result.className = "result-box result-loading";
+        result.style.display = "block";
+        result.textContent = "正在导出 coredump，请稍候...";
+
+        fetch("/api/tools/coredump/export")
+          .then(function (resp) {
+            if (!resp.ok) {
+              return resp.text().then(function (txt) {
+                var msg = txt || ("HTTP " + resp.status);
+                try {
+                  var obj = JSON.parse(txt);
+                  msg = obj.error || obj.message || msg;
+                } catch (e) {}
+                throw new Error(msg);
+              });
+            }
+
+            var cd = resp.headers.get("Content-Disposition") || "";
+            var fileName = "esp32-coredump.bin";
+            var m = cd.match(/filename\*=UTF-8''([^;]+)|filename=\"?([^\";]+)\"?/i);
+            if (m) fileName = decodeURIComponent(m[1] || m[2]);
+
+            return resp.blob().then(function (blob) {
+              return { blob: blob, fileName: fileName };
+            });
+          })
+          .then(function (d) {
+            var url = URL.createObjectURL(d.blob);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = d.fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            btn.disabled = false;
+            result.className = "result-box result-success";
+            result.textContent =
+              "✅ coredump 导出成功，文件大小 " + fmt(d.blob.size);
+            if (coredumpElfUrl) {
+              result.innerHTML += "<br><small style='opacity:.8'>正在触发 ELF 下载，若未自动弹出请检查浏览器拦截...</small>";
+              var elfa = document.createElement("a");
+              elfa.href = coredumpElfUrl;
+              elfa.target = "_blank";
+              document.body.appendChild(elfa);
+              elfa.click();
+              document.body.removeChild(elfa);
+            }
+          })
+          .catch(function (e) {
+            btn.disabled = false;
+            result.className = "result-box result-error";
+            result.textContent = "❌ 导出失败: " + e.message;
+          });
+      }
+
+      function importConfig() {
+        var fileInput = document.getElementById("importFile");
+        var result = document.getElementById("importResult");
+        var btn = document.getElementById("importBtn");
+
+        if (!fileInput.files || fileInput.files.length === 0) {
+          result.className = "result-box result-error";
+          result.style.display = "block";
+          result.textContent = "❌ 请先选择 JSON 文件";
+          return;
+        }
+
+        var file = fileInput.files[0];
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          btn.disabled = true;
+          result.className = "result-box result-loading";
+          result.style.display = "block";
+          result.textContent = "正在导入，请稍候...";
+
+          fetch("/api/config/import", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: e.target.result,
+          })
+            .then(function (resp) {
+              return resp.json();
+            })
+            .then(function (data) {
+              btn.disabled = false;
+              if (data.ok) {
+                result.className = "result-box result-success";
+                result.textContent = "✅ " + data.message;
+              } else {
+                result.className = "result-box result-error";
+                result.textContent = "❌ " + (data.error || "导入失败");
+              }
+            })
+            .catch(function (e) {
+              btn.disabled = false;
+              result.className = "result-box result-error";
+              result.textContent = "❌ 请求失败: " + e.message;
+            });
+        };
+        reader.readAsText(file);
+      }
+
+      function updateCount(el) {
+        document.getElementById("charCount").textContent = el.value.length;
+      }
+
+      function querySoc() {
+        var btn = document.getElementById("socBtn");
+        var result = document.getElementById("socResult");
+        btn.disabled = true;
+        result.className = "result-box result-loading";
+        result.style.display = "block";
+        result.textContent = "正在查询...";
+
+        fetch("/api/soc")
+          .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
+          .then(function (d) {
+            btn.disabled = false;
+            result.className = "result-box result-info";
+            result.innerHTML =
+              '<table class="info-table">' +
+              "<tr><td>空闲堆内存</td><td>" +
+              fmt(d.freeHeap) +
+              "</td></tr>" +
+              "<tr><td>最小剩余堆</td><td>" +
+              fmt(d.minFreeHeap) +
+              "</td></tr>" +
+              "<tr><td>Flash 总量</td><td>" +
+              fmt(d.flashTotal) +
+              "</td></tr>" +
+              "<tr><td>Flash 已用</td><td>" +
+              fmt(d.flashUsed) +
+              "</td></tr>" +
+              "<tr><td>LittleFS 总量</td><td>" +
+              fmt(d.fsTotal) +
+              "</td></tr>" +
+              "<tr><td>LittleFS 已用</td><td>" +
+              fmt(d.fsUsed) +
+              "</td></tr>" +
+              "<tr><td>CPU 频率</td><td>" +
+              d.cpuFreqMHz +
+              " MHz</td></tr>" +
+              "<tr><td>芯片 ID</td><td>" +
+              d.chipId +
+              "</td></tr>" +
+              "<tr><td>运行时长</td><td>" +
+              d.uptimeSeconds +
+              " 秒</td></tr>" +
+              "</table>";
+          })
+          .catch(function (e) {
+            btn.disabled = false;
+            result.className = "result-box result-error";
+            result.textContent = "❌ 查询失败: " + e.message;
+          });
+      }
+
+      function loadStatus() {
+        document.getElementById("statusError").style.display = "none";
+        fetch("/api/status")
+          .then(function (resp) {
+            if (!resp.ok) throw new Error("HTTP " + resp.status);
+            return resp.json();
+          })
+          .then(function (data) {
+            document.getElementById("devIp").textContent = data.ip || "-";
+            document.getElementById("wifiStatus").textContent =
+              data.wifiConnected ? "已连接" : "未连接";
+            document.getElementById("cfgStatus").textContent = data.configValid
+              ? "有效"
+              : "未配置";
+          })
+          .catch(function (e) {
+            document.getElementById("statusErrorMsg").textContent =
+              "无法获取设备状态（" + e.message + "）";
+            document.getElementById("statusError").style.display = "block";
+          });
+      }
+
+      function loadSoc() {
+        fetch("/api/soc")
+          .then(function (resp) {
+            if (!resp.ok) throw new Error("HTTP " + resp.status);
+            return resp.json();
+          })
+          .then(function (data) {
+            if (data.flashTotal === undefined) return;
+            var total = data.flashTotal,
+              used = data.flashUsed,
+              free = data.flashFree;
+            var threshold = Math.min(total * 0.1, 50 * 1024);
+            var isWarn = free < threshold;
+            var el = document.getElementById("flashStatus");
+            document.getElementById("flashUsageText").textContent =
+              fmt(used) + " / " + fmt(total) + "，剩余 " + fmt(free);
+            el.style.display = "block";
+            el.style.borderLeftColor = isWarn ? "#ffc107" : "#9e9e9e";
+            el.style.background = isWarn ? "#fff3cd" : "#f5f5f5";
+          })
+          .catch(function () {});
+      }
+
+      function sendSms() {
+        var phone = document.getElementById("smsPhone").value.trim();
+        var content = document.getElementById("smsContent").value.trim();
+        var result = document.getElementById("smsResult");
+        var btn = document.getElementById("sendSmsBtn");
+
+        if (!phone || !content) {
+          result.className = "result-box result-error";
+          result.style.display = "block";
+          result.textContent = "❌ 请填写手机号和短信内容";
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = "⏳ 发送中...";
+        result.className = "result-box result-loading";
+        result.style.display = "block";
+        result.textContent = "正在发送...";
+
+        var form = new FormData();
+        form.append("phone", phone);
+        form.append("content", content);
+
+        fetch("/sendsms", { method: "POST", body: form })
+          .then(function (resp) {
+            if (!resp.ok) throw new Error("HTTP " + resp.status);
+            return resp.json();
+          })
+          .then(function (data) {
+            btn.disabled = false;
+            btn.textContent = "📨 发送短信";
+            if (data.ok) {
+              result.className = "result-box result-success";
+              result.innerHTML = "✅ 发送成功！<br>" + (data.message || "");
+            } else {
+              result.className = "result-box result-error";
+              result.innerHTML = "❌ 发送失败<br>" + (data.error || data.message || "");
+            }
+          })
+          .catch(function (e) {
+            btn.disabled = false;
+            btn.textContent = "📨 发送短信";
+            result.className = "result-box result-error";
+            result.textContent = "❌ 请求失败: " + e.message;
+          });
+      }
+
+      function queryInfo(type) {
+        var result = document.getElementById("queryResult");
+        result.className = "result-box result-loading";
+        result.style.display = "block";
+        result.textContent = "正在查询，请稍候...";
+
+        fetch("/query?type=" + encodeURIComponent(type))
+          .then(function (resp) {
+            if (!resp.ok) throw new Error("HTTP " + resp.status);
+            return resp.json();
+          })
+          .then(function (data) {
+            if (data.ok) {
+              result.className = "result-box result-info";
+              result.innerHTML = data.message;
+            } else {
+              result.className = "result-box result-error";
+              result.innerHTML = "❌ 查询失败<br>" + (data.error || data.message || "");
+            }
+          })
+          .catch(function (e) {
+            result.className = "result-box result-error";
+            result.textContent = "❌ 请求失败: " + e.message;
+          });
+      }
+
+      function confirmPing() {
+        if (confirm("确定要执行 Ping 操作吗？\n\n这将消耗少量流量。")) doPing();
+      }
+
+      function doPing() {
+        var btn = document.getElementById("pingBtn");
+        var result = document.getElementById("pingResult");
+        btn.disabled = true;
+        btn.textContent = "⏳ 正在 Ping...";
+        result.className = "result-box result-loading";
+        result.style.display = "block";
+        result.textContent = "正在执行 Ping 操作，请稍候（最长等待30秒）...";
+
+        fetch("/ping", { method: "POST" })
+          .then(function (resp) {
+            if (!resp.ok) throw new Error("HTTP " + resp.status);
+            return resp.json();
+          })
+          .then(function (data) {
+            btn.disabled = false;
+            btn.textContent = "📡 点我消耗一点流量";
+            if (data.ok) {
+              result.className = "result-box result-success";
+              result.innerHTML = "✅ Ping 成功！<br>" + data.message;
+            } else {
+              result.className = "result-box result-error";
+              result.innerHTML = "❌ Ping 失败<br>" + (data.error || data.message || "");
+            }
+          })
+          .catch(function (e) {
+            btn.disabled = false;
+            btn.textContent = "📡 点我消耗一点流量";
+            result.className = "result-box result-error";
+            result.textContent = "❌ 请求失败: " + e.message;
+          });
+      }
+
+      function queryFlightMode() {
+        var result = document.getElementById("flightResult");
+        result.className = "result-box result-loading";
+        result.style.display = "block";
+        result.textContent = "正在查询飞行模式状态...";
+
+        fetch("/flight?action=query")
+          .then(function (resp) {
+            if (!resp.ok) throw new Error("HTTP " + resp.status);
+            return resp.json();
+          })
+          .then(function (data) {
+            if (data.ok) {
+              result.className = "result-box result-info";
+              result.innerHTML = data.message;
+            } else {
+              result.className = "result-box result-error";
+              result.innerHTML = "❌ 查询失败: " + (data.error || data.message || "");
+            }
+          })
+          .catch(function (e) {
+            result.className = "result-box result-error";
+            result.textContent = "❌ 请求失败: " + e.message;
+          });
+      }
+
+      function openLogs() {
+        window.open("/api/logs", "_blank");
+      }
+
+      function clearLogs() {
+        var btn = document.getElementById("clearLogsBtn");
+        var result = document.getElementById("logsResult");
+        if (!confirm("确定要清除所有日志记录吗？")) return;
+        btn.disabled = true;
+        result.className = "result-box result-loading";
+        result.style.display = "block";
+        result.textContent = "正在清除...";
+        fetch("/api/logs", { method: "DELETE" })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            btn.disabled = false;
+            if (d.ok) {
+              result.className = "result-box result-success";
+              result.textContent = "✅ 日志已清除";
+            } else {
+              result.className = "result-box result-error";
+              result.textContent = "❌ 清除失败";
+            }
+          })
+          .catch(function (e) {
+            btn.disabled = false;
+            result.className = "result-box result-error";
+            result.textContent = "❌ 请求失败: " + e.message;
+          });
+      }
+
+      function toggleFlightMode() {
+        if (
+          !confirm(
+            "确定要切换飞行模式吗？\n\n开启飞行模式后模组将无法收发短信。",
+          )
+        )
+          return;
+        var btn = document.getElementById("flightBtn");
+        var result = document.getElementById("flightResult");
+        btn.disabled = true;
+        result.className = "result-box result-loading";
+        result.style.display = "block";
+        result.textContent = "正在切换飞行模式...";
+
+        fetch("/flight?action=toggle")
+          .then(function (resp) {
+            if (!resp.ok) throw new Error("HTTP " + resp.status);
+            return resp.json();
+          })
+          .then(function (data) {
+            btn.disabled = false;
+            if (data.ok) {
+              result.className = "result-box result-success";
+              result.innerHTML = "✅ " + data.message;
+            } else {
+              result.className = "result-box result-error";
+              result.innerHTML = "❌ 切换失败: " + (data.error || data.message || "");
+            }
+          })
+          .catch(function (e) {
+            btn.disabled = false;
+            result.className = "result-box result-error";
+            result.textContent = "❌ 请求失败: " + e.message;
+          });
+      }
+
+      function addLog(msg, type) {
+        var log = document.getElementById("atLog");
+        var div = document.createElement("div");
+        var prefix = document.createElement("b");
+        if (type === "user") {
+          prefix.style.color = "#fff";
+          prefix.textContent = "> ";
+        } else if (type === "error") {
+          prefix.style.color = "#f44336";
+          prefix.textContent = "❌ ";
+        } else {
+          prefix.style.color = "#4CAF50";
+          prefix.textContent = "[RESP] ";
+        }
+        div.appendChild(prefix);
+        div.appendChild(document.createTextNode(msg));
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+      }
+
+      function clearATLog() {
+        document.getElementById("atLog").innerHTML = "";
+      }
+
+      function sendAT() {
+        var input = document.getElementById("atCmd");
+        var cmd = input.value.trim();
+        if (!cmd) return;
+
+        var btn = document.getElementById("atBtn");
+        btn.disabled = true;
+        btn.textContent = "...";
+        addLog(cmd, "user");
+        input.value = "";
+
+        fetch("/at?cmd=" + encodeURIComponent(cmd))
+          .then(function (resp) {
+            if (!resp.ok) throw new Error("HTTP " + resp.status);
+            return resp.json();
+          })
+          .then(function (data) {
+            btn.disabled = false;
+            btn.textContent = "发送";
+            var msg = data.ok ? (data.message || "") : (data.error || data.message || "");
+            var lines = msg.split("\n");
+            var type = data.ok ? "resp" : "error";
+            for (var l = 0; l < lines.length; l++) {
+              if (lines[l].trim()) addLog(lines[l], type);
+            }
+            if (!data.ok && !msg) {
+              addLog("执行失败", "error");
+            }
+          })
+          .catch(function (e) {
+            btn.disabled = false;
+            btn.textContent = "发送";
+            addLog("请求失败: " + e.message, "error");
+          });
+      }
+
+      // ── 收到的信息（收件箱）──────────────────────────────────
+      function escHtml(s) {
+        return String(s === null || s === undefined ? "" : s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      var msgTimer = null;
+
+      function loadMessages() {
+        var box = document.getElementById("messageList");
+        fetch("/api/messages")
+          .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
+          .then(function (d) {
+            renderMessages(d.messages || []);
+          })
+          .catch(function (e) {
+            box.innerHTML =
+              '<div class="result-box result-error">❌ 读取失败: ' +
+              escHtml(e.message) +
+              "</div>";
+          });
+      }
+
+      function formatMsgTime(m) {
+        // ts 是收到时的 epoch 秒，优先用它格式化；拿不到就退回 PDU 原始时间戳
+        if (m.ts && m.ts > 1000000000) {
+          var d = new Date(m.ts * 1000);
+          function p(n) {
+            return (n < 10 ? "0" : "") + n;
+          }
+          return (
+            d.getFullYear() +
+            "-" +
+            p(d.getMonth() + 1) +
+            "-" +
+            p(d.getDate()) +
+            " " +
+            p(d.getHours()) +
+            ":" +
+            p(d.getMinutes()) +
+            ":" +
+            p(d.getSeconds())
+          );
+        }
+        return m.timestamp || "";
+      }
+
+      function renderMessages(list) {
+        var box = document.getElementById("messageList");
+        if (!list.length) {
+          box.innerHTML = '<div class="hint">暂时没有收到任何信息</div>';
+          return;
+        }
+        var html = "";
+        for (var i = 0; i < list.length; i++) {
+          var m = list[i];
+          var kind = m.type === "call" ? "📞 来电" : "✉️ 短信";
+          if (m.label) kind += "·" + m.label;
+          html +=
+            '<div class="msg-item">' +
+            '<div class="msg-head"><span>' +
+            escHtml(m.sender) +
+            '</span><span class="msg-time">' +
+            escHtml(formatMsgTime(m)) +
+            "</span></div>" +
+            '<div class="msg-kind">' +
+            escHtml(kind) +
+            "</div>" +
+            '<div class="msg-body">' +
+            escHtml(m.content || "").replace(/\n/g, "<br>") +
+            "</div>" +
+            "</div>";
+        }
+        box.innerHTML = html;
+      }
+
+      function clearMessages() {
+        if (!confirm("确定要清空全部已收到的信息吗？此操作不可撤销。")) return;
+        fetch("/api/messages", { method: "DELETE" })
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (d) {
+            if (!d.ok) throw new Error(d.error || "清空失败");
+            loadMessages();
+          })
+          .catch(function (e) {
+            alert("清空失败: " + e.message);
+          });
+      }
+
+      function startMsgAutoRefresh() {
+        if (msgTimer) clearInterval(msgTimer);
+        msgTimer = setInterval(function () {
+          loadMessages();
+          // 编辑过程中不重绘列表，避免正在编辑的那条被换掉
+          if (expiryEditIndex < 0) loadExpiry();
+        }, 5000);
+      }
+
+      // ── SIM卡到期提醒 ────────────────────────────────────────
+      var expiryEditIndex = -1;
+      var expiryEntries = [];
+      var expiryCurrentNumber = "";
+      var expiryOffsets = [30, 15, 7, 1];
+
+      function loadExpiry() {
+        fetch("/api/sim-expiry")
+          .then(function (r) {
+            if (!r.ok) throw new Error("HTTP " + r.status);
+            return r.json();
+          })
+          .then(function (d) {
+            expiryEntries = d.entries || [];
+            expiryCurrentNumber = d.currentNumber || "";
+            document.getElementById("expCurrent").textContent =
+              expiryCurrentNumber && expiryCurrentNumber !== "未知"
+                ? expiryCurrentNumber
+                : "未知";
+            renderExpiry();
+          })
+          .catch(function (e) {
+            var box = document.getElementById("expiryResult");
+            box.className = "result-box result-error";
+            box.style.display = "block";
+            box.textContent = "❌ 读取失败: " + e.message;
+          });
+      }
+
+      function expiryDaysLabel(days) {
+        if (days === -999 || days === undefined || days === null) {
+          return '<span class="badge badge-danger">日期无效</span>';
+        }
+        if (days < 0) {
+          return '<span class="badge badge-danger">已过期 ' + -days + " 天</span>";
+        }
+        if (days === 0) {
+          return '<span class="badge badge-danger">今天到期</span>';
+        }
+        if (days <= 7) {
+          return '<span class="badge badge-warn">还剩 ' + days + " 天</span>";
+        }
+        return '<span class="badge badge-ok">还剩 ' + days + " 天</span>";
+      }
+
+      function renderExpiry() {
+        var box = document.getElementById("expiryList");
+        if (!expiryEntries.length) {
+          box.innerHTML = '<div class="hint">还没有保存任何到期提醒</div>';
+          return;
+        }
+        var html = "";
+        for (var i = 0; i < expiryEntries.length; i++) {
+          var e = expiryEntries[i];
+          var notified = [];
+          for (var k = 0; k < 4; k++) {
+            if (e.notifiedMask & (1 << k)) notified.push(expiryOffsets[k] + "天");
+          }
+          html +=
+            '<div class="rem-item">' +
+            '<div class="rem-row"><span class="rem-title">' +
+            escHtml(e.number) +
+            "</span>" +
+            expiryDaysLabel(e.daysLeft) +
+            "</div>" +
+            '<div class="rem-sub">到期日期：' +
+            escHtml(e.expiryDate) +
+            (e.note ? " · 备注：" + escHtml(e.note) : "") +
+            (e.enabled ? "" : " · 已停用") +
+            (notified.length ? " · 已提醒：" + escHtml(notified.join("、")) : "") +
+            "</div>" +
+            '<div class="rem-actions">' +
+            '<button type="button" onclick="editExpiry(' +
+            i +
+            ')" style="background:#ff9800">✏️ 编辑</button>' +
+            '<button type="button" onclick="deleteExpiry(' +
+            i +
+            ')" style="background:#f44336">🗑️ 删除</button>' +
+            "</div></div>";
+        }
+        box.innerHTML = html;
+      }
+
+      function fillCurrentNumber() {
+        if (!expiryCurrentNumber || expiryCurrentNumber === "未知") {
+          alert("还没读到本机号码，请手动填写");
+          return;
+        }
+        document.getElementById("expNumber").value = expiryCurrentNumber;
+      }
+
+      function editExpiry(i) {
+        var e = expiryEntries[i];
+        document.getElementById("expNumber").value = e.number;
+        document.getElementById("expDate").value = e.expiryDate;
+        document.getElementById("expNote").value = e.note || "";
+        document.getElementById("expEnabled").checked = !!e.enabled;
+        document.getElementById("expOff30").checked = !!(e.offsetsMask & 1);
+        document.getElementById("expOff15").checked = !!(e.offsetsMask & 2);
+        document.getElementById("expOff7").checked = !!(e.offsetsMask & 4);
+        document.getElementById("expOff1").checked = !!(e.offsetsMask & 8);
+        expiryEditIndex = i;
+        document.getElementById("expSaveBtn").textContent = "💾 更新这条提醒";
+        document.getElementById("expCancelBtn").style.display = "block";
+        window.scrollTo({
+          top: document.getElementById("expNumber").offsetTop - 60,
+          behavior: "smooth",
+        });
+      }
+
+      function resetExpiryForm() {
+        expiryEditIndex = -1;
+        document.getElementById("expNumber").value = "";
+        document.getElementById("expDate").value = "";
+        document.getElementById("expNote").value = "";
+        document.getElementById("expEnabled").checked = true;
+        document.getElementById("expOff30").checked = true;
+        document.getElementById("expOff15").checked = true;
+        document.getElementById("expOff7").checked = true;
+        document.getElementById("expOff1").checked = true;
+        document.getElementById("expSaveBtn").textContent = "💾 保存到期提醒";
+        document.getElementById("expCancelBtn").style.display = "none";
+      }
+
+      function saveExpiry() {
+        var result = document.getElementById("expiryResult");
+        var number = document.getElementById("expNumber").value.trim();
+        var date = document.getElementById("expDate").value;
+        var note = document.getElementById("expNote").value.trim();
+
+        function fail(msg) {
+          result.className = "result-box result-error";
+          result.style.display = "block";
+          result.textContent = "❌ " + msg;
+        }
+
+        if (!number) {
+          fail("请填写要提醒的号码");
+          return;
+        }
+        if (!date) {
+          fail("请选择到期日期");
+          return;
+        }
+
+        var offsets = [];
+        if (document.getElementById("expOff30").checked) offsets.push(30);
+        if (document.getElementById("expOff15").checked) offsets.push(15);
+        if (document.getElementById("expOff7").checked) offsets.push(7);
+        if (document.getElementById("expOff1").checked) offsets.push(1);
+
+        var body = {
+          number: number,
+          expiryDate: date,
+          note: note,
+          offsets: offsets,
+          enabled: document.getElementById("expEnabled").checked,
+        };
+        if (expiryEditIndex >= 0) body.index = expiryEditIndex;
+
+        result.className = "result-box result-loading";
+        result.style.display = "block";
+        result.textContent = "保存中...";
+
+        fetch("/api/sim-expiry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        })
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (d) {
+            if (!d.ok) throw new Error(d.error || "保存失败");
+            result.className = "result-box result-success";
+            result.textContent = "✅ " + (d.message || "保存成功");
+            resetExpiryForm();
+            loadExpiry();
+          })
+          .catch(function (e) {
+            result.className = "result-box result-error";
+            result.textContent = "❌ " + e.message;
+          });
+      }
+
+      function deleteExpiry(i) {
+        var e = expiryEntries[i];
+        if (!confirm("确定删除 " + e.number + " 的到期提醒吗？")) return;
+        fetch("/api/sim-expiry?index=" + i, { method: "DELETE" })
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (d) {
+            if (!d.ok) throw new Error(d.error || "删除失败");
+            loadExpiry();
+          })
+          .catch(function (e) {
+            alert("删除失败: " + e.message);
+          });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        loadStatus();
+        loadSoc();
+        loadCoredumpInfo();
+        startOtaVersionCheck();
+        loadMessages();
+        loadExpiry();
+        startMsgAutoRefresh();
+      });
+
+      // ── OTA ──────────────────────────────────────────────────────
+      var otaPollingTimer = null;
+      var otaInUpgrade = false;
+      var otaCurrentVersion = "";
+      var otaLatestVersion = "";
+
+      function otaStateLabel(state) {
+        var map = {
+          idle: "空闲",
+          checking: "正在检查版本...",
+          downloading: "下载固件中...",
+          writing: "写入固件中...",
+          flashing_fs: "写入 Web UI 中...",
+          success: "升级成功，重启中...",
+          failed: "升级失败",
+        };
+        return map[state] || state;
+      }
+
+      function renderOtaStatus(d) {
+        var progress = document.getElementById("otaProgress");
+        var curVerEl = document.getElementById("otaCurVer");
+        var latestEl = document.getElementById("otaLatestVer");
+        var onlineBtn = document.getElementById("otaOnlineBtn");
+        var upToDate = document.getElementById("otaUpToDate");
+
+        if (d.currentVersion) {
+          curVerEl.textContent = d.currentVersion;
+          otaCurrentVersion = d.currentVersion;
+        }
+        if (d.latestVersion) {
+          latestEl.textContent = d.latestVersion;
+          otaLatestVersion = d.latestVersion;
+        } else if (d.state === "checking") latestEl.textContent = "检查中...";
+
+        var stateLabel = otaStateLabel(d.state);
+        if (d.state !== "idle") {
+          progress.style.display = "block";
+          if (d.state === "failed") {
+            progress.className = "result-box result-error";
+            progress.textContent = "❌ " + (d.message || "升级失败");
+          } else if (d.state === "success") {
+            progress.className = "result-box result-success";
+            progress.textContent =
+              "✅ " + (d.message || "升级成功，设备即将重启");
+          } else {
+            progress.className = "result-box result-loading";
+            progress.textContent =
+              stateLabel + (d.progress > 0 ? "（" + d.progress + "%）" : "");
+          }
+        } else {
+          if (!otaInUpgrade) progress.style.display = "none";
+        }
+
+        // 版本比较（仅 idle/failed 且有 latestVersion 时显示按钮）
+        if (d.latestVersion && d.currentVersion) {
+          if (d.latestVersion !== d.currentVersion) {
+            latestEl.textContent = d.latestVersion + " 🆕";
+            onlineBtn.disabled = false;
+            upToDate.style.display = "none";
+          } else {
+            onlineBtn.disabled = true;
+            upToDate.style.display = "block";
+          }
+        }
+      }
+
+      function pollOtaStatus() {
+        fetch("/api/ota/status")
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (d) {
+            // 先清标志、停轮询，再渲染；这样 renderOtaStatus 看到的 otaInUpgrade 已是最终值
+            if (
+              d.state === "success" ||
+              d.state === "failed" ||
+              d.state === "idle"
+            ) {
+              stopOtaPolling();
+              otaInUpgrade = false;
+            }
+            renderOtaStatus(d);
+          })
+          .catch(function () {
+            // 设备可能正在 OTA 重启，给用户提示而非静默失败
+            if (otaInUpgrade) {
+              var p = document.getElementById("otaProgress");
+              if (p) {
+                p.className = "result-box result-loading";
+                p.style.display = "block";
+                p.textContent = "设备升级重启中，请稍候...";
+              }
+            }
+          });
+      }
+
+      function startOtaPolling() {
+        if (otaPollingTimer) return;
+        otaPollingTimer = setInterval(pollOtaStatus, 1000);
+      }
+
+      function stopOtaPolling() {
+        if (otaPollingTimer) {
+          clearInterval(otaPollingTimer);
+          otaPollingTimer = null;
+        }
+      }
+
+      function startOtaVersionCheck() {
+        fetch("/api/ota/version")
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (d) {
+            renderOtaStatus(d);
+            // 只要版本号还没拿到就启动轮询（后端任务异步启动，首次响应可能仍是 idle+空版本）
+            if (!d.latestVersion) {
+              startOtaPolling();
+            }
+          })
+          .catch(function (e) {
+            document.getElementById("otaCurVer").textContent = "获取失败";
+            document.getElementById("otaLatestVer").textContent = "检查失败";
+          });
+
+        // 页面加载/刷新时检测是否有正在进行的升级，有则自动恢复轮询
+        fetch("/api/ota/status")
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            var active = ["checking", "downloading", "writing", "flashing_fs"];
+            if (active.indexOf(d.state) !== -1) {
+              otaInUpgrade = true;
+              renderOtaStatus(d);
+              startOtaPolling();
+            }
+          })
+          .catch(function () {});
+      }
+
+      function startOnlineUpgrade() {
+        if (!otaLatestVersion || otaLatestVersion === otaCurrentVersion) {
+          var p = document.getElementById("otaProgress");
+          p.className = "result-box result-error";
+          p.style.display = "block";
+          p.textContent =
+            "❌ " +
+            (!otaLatestVersion
+              ? "尚未获取最新版本，请稍候重试"
+              : "当前已是最新版本，无需升级");
+          return;
+        }
+        if (
+          !confirm(
+            "确定要开始在线升级吗？\n\n目标版本: " +
+              otaLatestVersion +
+              "\n升级过程中请勿断电，设备升级成功后将自动重启。",
+          )
+        )
+          return;
+        var btn = document.getElementById("otaOnlineBtn");
+        btn.disabled = true;
+        otaInUpgrade = true;
+
+        fetch("/api/ota/start", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tag: otaLatestVersion }),
+        })
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (d) {
+            if (d.ok) {
+              startOtaPolling();
+            } else {
+              btn.disabled = false;
+              otaInUpgrade = false;
+              var p = document.getElementById("otaProgress");
+              p.className = "result-box result-error";
+              p.style.display = "block";
+              p.textContent = "❌ " + (d.error || d.message || "启动升级失败");
+            }
+          })
+          .catch(function (e) {
+            btn.disabled = false;
+            otaInUpgrade = false;
+            var p = document.getElementById("otaProgress");
+            p.className = "result-box result-error";
+            p.style.display = "block";
+            p.textContent = "❌ 请求失败: " + e.message;
+          });
+      }
+
+      function startManualUpgrade() {
+        var fileInput = document.getElementById("otaFile");
+        var btn = document.getElementById("otaUploadBtn");
+        var progress = document.getElementById("otaProgress");
+
+        if (!fileInput.files || fileInput.files.length === 0) {
+          progress.className = "result-box result-error";
+          progress.style.display = "block";
+          progress.textContent = "❌ 请先选择 .bin 固件文件";
+          return;
+        }
+
+        var file = fileInput.files[0];
+        if (file.size > 1.5 * 1024 * 1024) {
+          progress.className = "result-box result-error";
+          progress.style.display = "block";
+          progress.textContent =
+            "❌ 文件过大（单个 OTA 分区最大约 1.25MB），请确认选择了正确的固件文件";
+          return;
+        }
+
+        if (
+          !confirm(
+            "确定要上传并安装此固件吗？\n\n文件：" +
+              file.name +
+              "\n大小：" +
+              (file.size / 1024).toFixed(1) +
+              " KB\n\n升级成功后设备将自动重启。",
+          )
+        )
+          return;
+
+        btn.disabled = true;
+        otaInUpgrade = true;
+        progress.className = "result-box result-loading";
+        progress.style.display = "block";
+        progress.textContent = "正在上传固件，请稍候...";
+
+        var form = new FormData();
+        form.append("firmware", file);
+
+        fetch("/api/ota/upload", { method: "POST", body: form })
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (d) {
+            btn.disabled = false;
+            otaInUpgrade = false;
+            if (d.ok) {
+              progress.className = "result-box result-success";
+              progress.textContent =
+                "✅ " + (d.message || "上传成功，设备即将重启");
+            } else {
+              progress.className = "result-box result-error";
+              progress.textContent = "❌ " + (d.error || d.message || "上传失败");
+            }
+          })
+          .catch(function (e) {
+            btn.disabled = false;
+            otaInUpgrade = false;
+            progress.className = "result-box result-error";
+            progress.textContent = "❌ 上传失败: " + e.message;
+          });
+
+        startOtaPolling();
+      }
+
+      function startManualLfsUpgrade() {
+        var fileInput = document.getElementById("otaFsFile");
+        var btn = document.getElementById("otaUploadFsBtn");
+        var progress = document.getElementById("otaProgress");
+
+        if (!fileInput.files || fileInput.files.length === 0) {
+          progress.className = "result-box result-error";
+          progress.style.display = "block";
+          progress.textContent = "❌ 请先选择 LittleFS .bin 文件";
+          return;
+        }
+
+        var file = fileInput.files[0];
+        if (
+          !confirm(
+            "确定要上传并更新 Web UI 吗？\n\n文件：" +
+              file.name +
+              "\n大小：" +
+              (file.size / 1024).toFixed(1) +
+              " KB\n\n更新成功后设备将自动重启。",
+          )
+        )
+          return;
+
+        btn.disabled = true;
+        document.getElementById("otaUploadBtn").disabled = true;
+        otaInUpgrade = true;
+        progress.className = "result-box result-loading";
+        progress.style.display = "block";
+        progress.textContent = "正在上传 Web UI，请稍候...";
+
+        var form = new FormData();
+        form.append("filesystem", file);
+
+        fetch("/api/ota/upload-fs", { method: "POST", body: form })
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (d) {
+            btn.disabled = false;
+            document.getElementById("otaUploadBtn").disabled = false;
+            otaInUpgrade = false;
+            if (d.ok) {
+              progress.className = "result-box result-success";
+              progress.textContent =
+                "✅ " + (d.message || "上传成功，设备即将重启");
+            } else {
+              progress.className = "result-box result-error";
+              progress.textContent = "❌ " + (d.error || d.message || "上传失败");
+            }
+          })
+          .catch(function (e) {
+            btn.disabled = false;
+            document.getElementById("otaUploadBtn").disabled = false;
+            otaInUpgrade = false;
+            progress.className = "result-box result-error";
+            progress.textContent = "❌ 上传失败: " + e.message;
+          });
+
+        startOtaPolling();
+      }
+    </script>
+  </body>
+</html>
