@@ -37,7 +37,10 @@ ESP32-C3 + ML307A（Cat.1 4G）短信转发一体机：把原厂闭源固件换�
 - 工具箱「📅 SIM 卡到期提醒」：任意号码 + 提前 30/15/7/1 天各推一次续费提醒
 - 修掉整机时间比真实时间差 8 小时的问题（`AT+CCLK?` 的 UTC/时区处理）
 
-对应的 GitHub fork（含上游完整历史）见 `使用说明.md` 末尾说明。
+对应的 GitHub 仓库：
+
+- 工具包本仓库：<https://github.com/georyann/sms-forwarder-flash-kit>
+- 上游 fork（含上游完整历史 + 固件改动 + `tools/` 一键刷机）：<https://github.com/georyann/esp32-sms-forwarding>
 
 ## 注意事项
 
